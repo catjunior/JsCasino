@@ -6,7 +6,7 @@ function Stack() {
   this.newCards = [];
   this.makePacks = makePacks;
   this.shuffle = shuffle;
-  this.deal = stackDeal;
+  this.deal = deal;
 }
 
 function Card(value, suit) {
@@ -16,7 +16,7 @@ function Card(value, suit) {
 
 //------------- Makes n Packs of Cards
 function makePacks(n) {
-  var value = ['A', '2', '3', '4', '5', '6', '7', '8', '9','10', 'J', 'Q', 'K'];
+  var value = ['A', 'J', 'Q', 'K', 2,3,4,5,6,7,8,9,10];
   var suits = ["Spade", "Hart", "Club", "Diamond"];
   var d = value.length * suits.length;
   var i, j, k;
@@ -47,29 +47,29 @@ function newDeck() {
   deck.shuffle(2);
 }
 
-function stackDeal() {
+function deal() {
   if (this.newCards.length > 0)
     return this.newCards.shift();
   else
     return null;
 }
 
-//*****************  Player  **********************
+/**************************     Hands   ***************************************/
 function Hand(id) {
-  this.cards = new Array();
-  this.reset = handReset;
-  this.addCard  = handAddCard;
-  this.getScore  = handGetScore;
+  this.cards = [];
+  this.reset = reset;
+  this.addCard  = addCard;
+  this.getScore  = getScore;
   // Initialize as an empty hand.
   this.reset();
 }
 
-function handReset() {
-  this.cards = new Array();
-  this.blackjack = false;
+function reset() {
+  this.cards = [];
+  //this.blackjack = false;
 }
 
-function handAddCard(card) {
+function addCard(card) {
   var n;
   // Add the given card to the hand.
   n = this.cards.length;
@@ -77,27 +77,27 @@ function handAddCard(card) {
 }
 
 function getScore() {
-var i, total;
-total = 0;
-// count Aces as one
-for (i = 0; i < newCards.length; i++)
-  if (newCards[i].value == 'A')
-    total++;
-  else {
-    if (newCards[i].value == 'J' || newCards[i].value == 'Q' ||
-        newCards[i].value == 'K')
+  var i, total;
+  total = 0;
+  // add al Aces as one first.
+  for (i = 0; i < this.cards.length; i++)
+    if (this.cards[i].value === 'A')
+      total++;
+    else {
+      if (this.cards[i].value === 'J' || this.cards[i].value === 'Q' || this.cards[i].value === 'K')
+        total += 10;
+      else
+        total += this.cards[i].value;
+    }
+  // Change as many ace values to 11 as possible.
+  for (i = 0; i < this.cards.length; i++)
+    if (this.cards[i].value === 'A' && total <= 11)
       total += 10;
-    else
-      total += parseInt(newCards[i].value, 10);
-  }
-// count aces to 11 as possible
-for (i = 0; i < newCards.length; i++)
-  if (newCards[i].value == 'A' && total <= 11)
-    total += 10;
-return total;
+  return total;
 }
 
-/****************<<<<<<<<<<< BLACKJACK Started >>>>>>>>>>>>********************/
+
+/****************<<<<<<<<<<< BLACKJACK Initialize>>>>>>>>>>********************/
 
 var initCredit = 1000;
 var initBet = 10;
@@ -115,5 +115,48 @@ function startBlackJack(){
   // Create dealer and player hand.
   dealer = new Hand("dealer");
   player= new Hand("player");
+}
 
+function startRound() {
+  player.reset();
+  dealer.reset();
+
+  dealRoundCounter = 1;
+  dealRound();
+}
+
+function getNextCard() {
+  return deck.deal();
+}
+
+/****************<<<<<<<<<<    Start Dealing     >>>>>>>>>>********************/
+
+function dealRound(){
+  // Deal a card to the player or the dealer based on the counter.
+  switch(dealRoundCounter){
+    case 1:
+      player.addCard(getNextCard());
+      break;
+    case 2:
+      dealer.addCard(getNextCard());
+      break;
+    case 3:
+      player.addCard(getNextCard());
+      break;
+    case 4:
+      dealer.addCard(getNextCard());
+      break;
+    default:
+      // No more cards to deal, play the round.
+      playRound();
+      return;
+      break;
+  }
+  if (player.getScore() == 21) {
+  player.blackjack = true;
+}
+
+// Set a timer for the next call.
+dealRoundCounter++;
+setTimeout(dealRound, 1);
 }
