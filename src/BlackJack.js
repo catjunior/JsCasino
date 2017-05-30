@@ -1,17 +1,17 @@
 
 /****************<<<<<<<<<<<<< Cards Function >>>>>>>>>>>>>********************/
 //------------ Deck
+function Card(value, suit) {
+  this.value = value;
+  this.suit = suit;
+}
+
 function Stack() {
   // Create an empty array of cards.
   this.newCards = [];
   this.makePacks = makePacks;
   this.shuffle = shuffle;
   this.deal = deal;
-}
-
-function Card(value, suit) {
-  this.value = value;
-  this.suit = suit;
 }
 
 //------------- Makes n Packs of Cards
@@ -55,11 +55,12 @@ function deal() {
 }
 
 /**************************     Hands   ***************************************/
-function Hand(id) {
+function Hand(playerOrDealer) {
   this.cards = [];
   this.reset = reset;
   this.addCard  = addCard;
   this.getScore  = getScore;
+  this.blackjack;
   // Initialize as an empty hand.
   this.reset();
 }
@@ -154,9 +155,7 @@ function dealRound(){
   }
   if (player.getScore() == 21) {
   player.blackjack = true;
+  
 }
 
-// Set a timer for the next call.
 dealRoundCounter++;
-setTimeout(dealRound, 1);
-}
