@@ -1,27 +1,27 @@
 
-describe('Decks', function () {
+describe('Create New Decks', function () {
   beforeEach(function() {
-      deck = new Stack();
+      deck = new Deck();
   });
 
-  it('makePacks(1): should create a new Deck with 1 pack of cards', function() {
-    var len = deck.makePacks(1);
+  it('makeDecks(1): should create a new Deck with 1 pack of cards', function() {
+    var len = deck.makeDecks(1);
     expect(len.length).toBe(52);
   });
 
   it('makePacks(2): should create a new Deck with 2 packs of cards', function() {
-    var len = deck.makePacks(2);
+    var len = deck.makeDecks(2);
     expect(len.length).toBe(104);
   });
 
   it("deal(): should get the botton index of the deck (newCards)", function(){
-    var newCards = deck.makePacks(1);
+    var newCards = deck.makeDecks(1);
     var theCardDealed = newCards[0];
     expect(deck.deal()).toBe(theCardDealed);
   });
 
   it("deal(): once a car is dealed, the length of the deck should reduce by 1", function(){
-    var newCards = deck.makePacks(1);
+    var newCards = deck.makeDecks(1);
     var oriLength = newCards.length;
     deck.deal();
     expect(newCards.length).toBe(oriLength-1);
@@ -29,9 +29,9 @@ describe('Decks', function () {
 
 });
 
-describe('StartRound', function () {
+describe('FirstRound', function () {
   beforeEach(function() {
-    deck = new Stack();
+    deck = new Deck();
     player = new Hand();
   });
 
