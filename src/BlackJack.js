@@ -1,6 +1,6 @@
 
 /****************<<<<<<<<<<<<< Cards Function >>>>>>>>>>>>>********************/
-//------------- Single Card Face Value
+//------------ Deck
 function Stack() {
   // Create an empty array of cards.
   this.newCards = [];
@@ -54,6 +54,28 @@ function stackDeal() {
     return null;
 }
 
+//*****************  Player  **********************
+function Hand(id) {
+  this.cards = new Array();
+  this.reset = handReset;
+  this.addCard  = handAddCard;
+  this.getScore  = handGetScore;
+  // Initialize as an empty hand.
+  this.reset();
+}
+
+function handReset() {
+  this.cards = new Array();
+  this.blackjack = false;
+}
+
+function handAddCard(card) {
+  var n;
+  // Add the given card to the hand.
+  n = this.cards.length;
+  this.cards[n] = card;
+}
+
 function getScore() {
 var i, total;
 total = 0;
@@ -80,9 +102,18 @@ return total;
 var initCredit = 1000;
 var initBet = 10;
 var defaultBet = 10;
+var deck;
+var dealer;
+var player;
+var dealRoundCounter;
 
 function startBlackJack(){
   deck = new Stack();
   newDeck();
+  deck.makeDeck();
+  deck.shuffle();
+  // Create dealer and player hand.
+  dealer = new Hand("dealer");
+  player= new Hand("player");
 
 }
